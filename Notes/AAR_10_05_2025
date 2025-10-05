@@ -1,0 +1,69 @@
+# After-Action Report: Diagnostic Network Setup
+
+**Date:** 2025-10-05  
+**Author:** Chris Breault  
+**Project:** Universal Diagnostic System Prototype  
+**Environment:** Proxmox VE  
+
+---
+
+## 1. Objective
+
+Establish a secure, isolated virtual network to serve as a sandbox for developing and testing a universal diagnostic platform.  
+The setup simulates real-world IT maintenance conditions, allowing diagnostic tools and scripts to run on a “target” system from a separate “test” system.
+
+---
+
+## 2. Systems Overview
+
+| VM Name | Role | OS | Network | IP Address |
+|----------|------|----|----------|-------------|
+| **UbuntuTest** | Diagnostic Host (control node) | Ubuntu Desktop (Minimal Install) | vmbr1 (Isolated) | 192.168.100.10 |
+| **UbuntuTarget** | Simulated End-User System | Ubuntu Desktop (Full Install) | vmbr1 (Isolated) | 192.168.100.11 |
+
+---
+
+## 3. Actions Taken
+
+1. **Provisioned Two VMs** in Proxmox for a controlled diagnostic environment.
+2. **Installed Core Tools** on `UbuntuTest` for system information and diagnostics:
+   - `lshw`, `lscpu`, `hwinfo`, `smartmontools`, `memtester`, `stress-ng`, `sysstat`, and others.
+3. **Configured Static IPs** for both systems using NetworkManager GUI:
+   - Chose the private subnet `192.168.100.0/24`.
+   - Assigned placeholder gateway `192.168.100.1`.
+4. **Tested Network Connectivity** using ICMP (`ping`) in both directions.
+5. **Verified Communication** remained functional after moving both VMs to the isolated Proxmox bridge (`vmbr1`).
+
+---
+
+## 4. Results
+
+- Successful two-way communication between isolated systems.  
+- Confirmed that diagnostic operations can run without internet dependency.  
+- Established foundation for remote diagnostic scripting and data collection via SSH.
+
+---
+
+## 5. Lessons Learned
+
+- Using an internal bridge (`vmbr1`) is an effective way to isolate experimental systems without risking main network interference.
+- Assigning static IPs simplifies long-term management and remote operations.
+- Even in isolated environments, defining a “dummy” gateway and DNS ensures tool compatibility.
+
+---
+
+## 6. Next Steps
+
+1. Enable **SSH-based access** from UbuntuTest → UbuntuTarget.
+2. Develop and test an initial **Bash diagnostic script** to:
+   - Gather system information.
+   - Detect basic hardware or performance issues.
+   - Correlate findings with stored maintenance manuals.
+3. Integrate the script’s outputs into log files for automated reporting.
+
+---
+
+## 7. Remarks
+
+This marks the successful completion of the **Diagnostic Network Phase** of the Universal Diagnostic System project.  
+The setup represents a scalable and professional foundation for ongoing experimentation with system health monitoring, automation, and technical publication integration.
